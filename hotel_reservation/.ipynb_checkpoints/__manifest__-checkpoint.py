@@ -22,9 +22,17 @@
         "report/room_max_report_template.xml",
         "report/hotel_reservation_report_template.xml",
         "report/report_view.xml",
-        "views/assets.xml",
+#         "views/assets.xml",
         "wizards/hotel_reservation_wizard.xml",
     ],
+    
+    'assets': {
+        'web.assets_backend': [
+            'static/src/js/hotel_room_summary.js',
+            "static/src/css/room_summary.css",
+        ],
+    },
+    
     "qweb": ["static/src/xml/hotel_room_summary.xml"],
     "external_dependencies": {"python": ["dateutil"]},
     "installable": True,
