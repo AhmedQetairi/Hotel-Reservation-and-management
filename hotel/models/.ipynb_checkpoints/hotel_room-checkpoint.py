@@ -5,20 +5,32 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class HotelFloor(models.Model):
-
-    _name = "hotel.floor"
-    _description = "Floor"
-    _order = "sequence"
-
-    name = fields.Char("Floor Name", required=True, index=True)
-    sequence = fields.Integer("sequence", default=10)
-
-
 class HotelRoom(models.Model):
 
     _name = "hotel.room"
     _description = "Hotel Room"
+    
+    image = fields.Binary()
+    
+    location = fields.Many2one("hotel.location", "Location")
+    city = fields.Many2one("hotel.city", "City")
+    district = fields.Many2one("hotel.district", "District")
+    
+    BBcode = fields.Char("BBCODE")
+    shape = fields.Selection(
+        [("horizental", "Horizental"), ("vertical", "Vertical")],
+        "Shape",
+        default="",
+    )
+    
+    material = fields.Selection(
+        [("pvc", "PVC"), ("vinyl", "VINYL")],
+        "Material",
+        default="",
+    )
+    
+    bbspace_height = fields.Integer("BB Space Height")
+    bbspace_width = fields.Integer("BB Space Width")
 
     product_id = fields.Many2one(
         "product.product",

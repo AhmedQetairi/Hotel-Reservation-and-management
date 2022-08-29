@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- Action of hotel floor -->
-    <record id="open_hotel_floor_form_tree" model="ir.actions.act_window">
-        <field name="name">Floor</field>
-        <field name="res_model">hotel.floor</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+   
     <!-- Action for hotel room type -->
     <record id="open_hotel_room_type_form_tree" model="ir.actions.act_window">
         <field name="name">Room Type</field>

@@ -3,13 +3,13 @@
     <menuitem id="hotel_management_menu" name="Hotel Management" /> 
     <menuitem
         id="menu_all_folio"
-        name="Folio"
+        name="Quotation"
         parent="hotel.hotel_management_menu"
         sequence="4"
     />
     
     <menuitem
-        name="Generate Folio"
+        name="Quotations"
         id="menu_open_hotel_folio1_form_tree_all"
         action="open_hotel_folio1_form_tree_all"
         sequence="5"
@@ -33,14 +33,14 @@
     
      <menuitem
         id="menu_hotel_room"
-        name="Room"
+        name="Billboard"
         parent="hotel.hotel_configuration_menu"
         sequence="1"
     />
     
     <menuitem
         id="menu_open_hotel_room_form"
-        name="Rooms"
+        name="Billboards"
         action="action_hotel_room_form"
         sequence="2"
         parent="hotel.menu_hotel_room"
@@ -48,7 +48,7 @@
     
     <menuitem
         id="menu_open_hotel_room_type_form_tree"
-        name="Room Types"
+        name="Billboard Types"
         action="open_hotel_room_type_form_tree"
         sequence="3"
         parent="hotel.menu_hotel_room"
@@ -78,8 +78,5 @@
         parent="hotel.hotel_configuration_menu"
         sequence="6"
     />
-   
-    
-   
-    
+
 </odoo>
