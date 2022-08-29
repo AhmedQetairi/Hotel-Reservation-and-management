@@ -28,12 +28,17 @@
     
     'assets': {
         'web.assets_backend': [
-            'static/src/js/hotel_room_summary.js',
-            "static/src/css/room_summary.css",
+            
+            "/hotel_reservation/static/src/js/hotel_room_summary.js",
+            "/hotel_reservation/static/src/css/room_summary.css",
         ],
+        
+        'web.assets_qweb':[
+            "/hotel_reservation/static/src/xml/hotel_room_summary.xml",
+        ]
     },
     
-    "qweb": ["static/src/xml/hotel_room_summary.xml"],
+#     "qweb": ["/hotel_reservation/static/src/xml/hotel_room_summary.xml"],
     "external_dependencies": {"python": ["dateutil"]},
     "installable": True,
 }

@@ -8,8 +8,12 @@ odoo.define("hotel_reservation.hotel_room_summary", function (require) {
     var QWeb = core.qweb;
     var FormView = require("web.FormView");
     var py = window.py;
+    var EditorMenuBar = Widget.extend(MyWidget,{
+        xmlDependencies: ["/hotel_reservation/static/src/xml/hotel_room_summary.xml"],
+    })
 
     var MyWidget = FieldText.extend({
+        template:"RoomSummary",
         events: _.extend({}, FieldText.prototype.events, {
             change: "_onFieldChanged",
         }),
@@ -89,6 +93,7 @@ odoo.define("hotel_reservation.hotel_room_summary", function (require) {
             this.view_loading();
         },
     });
+    
 
     registry.add("Room_Reservation", MyWidget);
     return MyWidget;
