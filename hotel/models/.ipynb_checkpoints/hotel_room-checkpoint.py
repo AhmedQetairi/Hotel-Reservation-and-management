@@ -11,10 +11,11 @@ class HotelRoom(models.Model):
     _description = "Hotel Room"
     
     image = fields.Binary()
-    
+    name = fields.Char()
     location = fields.Many2one("hotel.location", "Location")
     city = fields.Many2one("hotel.city", "City")
     district = fields.Many2one("hotel.district", "District")
+    description = fields.Text()
     
     BBcode = fields.Char("BBCODE")
     shape = fields.Selection(
@@ -32,50 +33,38 @@ class HotelRoom(models.Model):
     bbspace_height = fields.Integer("BB Space Height")
     bbspace_width = fields.Integer("BB Space Width")
 
-    product_id = fields.Many2one(
-        "product.product",
-        "Product_id",
-        required=True,
-        delegate=True,
-        ondelete="cascade",
-    )
-    floor_id = fields.Many2one(
-        "hotel.floor",
-        "Floor No",
-        help="At which floor the room is located.",
-        ondelete="restrict",
-    )
-    max_adult = fields.Integer()
-    max_child = fields.Integer()
+    
     room_categ_id = fields.Many2one(
-        "hotel.room.type", "Room Category", required=True, ondelete="restrict"
+        "hotel.room.type", "Billboard Category", required=True, ondelete="restrict"
     )
-    room_amenities_ids = fields.Many2many(
-        "hotel.room.amenities", string="Room Amenities", help="List of room amenities."
-    )
+    categ_id = fields.Many2one("hotel.room.type", "Category")
+   
     status = fields.Selection(
         [("available", "Available"), ("occupied", "Occupied")],
         default="available",
     )
-    capacity = fields.Integer(required=True)
+   
     room_line_ids = fields.One2many(
-        "folio.room.line", "room_id", string="Room Reservation Line"
+        "folio.room.line", "room_id", string="Billboard Reservation Line"
     )
     product_manager = fields.Many2one("res.users")
+    
+    isroom = fields.Boolean()
 
     @api.model
     def create(self, vals):
+        if 'image' in vals:
+            picture = tools.ImageProcess(vals['image'])
+            # resize uploaded image into 250 X 250
+            resize_image = image.resize(250, 250)    
+            resize_image_b64 = resize_image.image_base64()   
+            vals['image'] = resize_image_b64
+            
         if "room_categ_id" in vals:
             room_categ = self.env["hotel.room.type"].browse(vals.get("room_categ_id"))
             vals.update({"categ_id": room_categ.product_categ_id.id})
         return super(HotelRoom, self).create(vals)
-
-    @api.constrains("capacity")
-    def _check_capacity(self):
-        for room in self:
-            if room.capacity <= 0:
-                raise ValidationError(_("Room capacity must be more than 0"))
-
+   
     @api.onchange("isroom")
     def _isroom_change(self):
         """
@@ -125,7 +114,7 @@ class HotelRoomType(models.Model):
     _description = "Room Type"
 
     categ_id = fields.Many2one("hotel.room.type", "Category")
-    child_ids = fields.One2many("hotel.room.type", "categ_id", "Room Child Categories")
+    child_ids = fields.One2many("hotel.room.type", "categ_id", "Billboard Child Categories")
     product_categ_id = fields.Many2one(
         "product.category",
         "Product Category",

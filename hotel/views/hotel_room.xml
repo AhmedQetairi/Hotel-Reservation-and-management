@@ -1,5 +1,4 @@
 <odoo>
-    
     <!-- ====== Rooms ====== -->
     <!-- Form view of hotel room -->
     <record id="view_hotel_room_form" model="ir.ui.view">
@@ -9,10 +8,9 @@
             <form string="Hotel Room">
                 <sheet>
                     <field
-                        name="image_1920"
+                        name="image"
                         widget="image"
                         class="oe_avatar"
-                        options="{'preview_image': 'image_128'}"
                     />
                     <div class="oe_title">
                         <label for="name" string="Name" />
@@ -30,60 +28,29 @@
                     <notebook>
                         <page name="information_hotel_room" string="Information">
                             <group colspan="4" col="4">
-                                <field name="floor_id" string="Floor" />
+<!--                                 <field name="floor_id" string="Floor" /> -->
                                 <field name="room_categ_id" select="1" />
-                                <field
-                                    name="product_manager"
-                                    select="2"
-                                    string="Room Manager"
-                                />
-                                <field name="capacity" />
-                                <field name="uom_id" invisible="1" />
-                                <field
-                                    name="supplier_taxes_id"
-                                    widget="many2many_tags"
-                                    string="Supplier Taxes"
-                                />
-                                <field
-                                    name="taxes_id"
-                                    widget="many2many_tags"
-                                    string="Customer Taxes"
-                                />
+                                <field name="location" select="1" required="1" />
+                                <field name="city" select="1" required="1" />
+                                <field name="district" select="1" required="1" />
+                                <field name="BBcode"/>
+                                <field name="shape"/>
+                                <field name="material"/>
+                                <div>
+                                    <label for="bbspace_height" string="BB Space M^2" />
+                                    <field name="bbspace_height"/>*<field name="bbspace_width" />
+                                </div>                             
                             </group>
                         </page>
-                        <page string="Room Amenities">
-                            <separator string=" Room Amenities" />
-                            <field name="room_amenities_ids" colspan="4" nolabel="1" />
-                        </page>
-                        <page string="Procurement">
-                            <group colspan="4" col="4">
-                                <field name="active" select="2" />
-                                <field name="list_price" />
-                                <!--commented as rental field is removed from odoo14-->
-                                <!-- <field name="rental" select="2" /> -->
-                                <field name="standard_price" />
-                                <field name="cost_method" string="Cost Method" />
-                                <newline />
-                            </group>
-                            <newline />
-                            <group>
-                                <separator string="Suppliers" />
-                                <field
-                                    name="seller_ids"
-                                    colspan="4"
-                                    nolabel="1"
-                                    widget="one2many_list"
-                                />
-                            </group>
-                        </page>
+                        
                         <page string="Descriptions">
                             <separator string="Description" />
                             <field name="description" colspan="4" nolabel="1" />
                         </page>
-                        <page string="Folio Room Reservations">
+                        <page string="Folio Billboard Reservations">
                             <separator
                                 colspan='4'
-                                string="Folio Room Reservation Line"
+                                string="Folio Billboard Reservation Line"
                             />
                             <field name="room_line_ids" colspan="4" nolabel='1'>
                                 <form string=" Room line">
@@ -117,18 +84,32 @@
             <search string="Hotel Room">
                 <field name="name" filter_domain="[('name', 'ilike', self)]" />
                 <field name="room_categ_id" />
-                <field name="list_price" string="Room rate" />
+<!--                 <field name="list_price" string="Room rate" /> -->
                 <field name="status" string="Status" />
                 <newline />
-                <filter
-                    name="available"
-                    string="Available"
-                    domain="[('status','=', 'available')]"
+                
+                 <filter
+                    name="ramallah"
+                    string="Ramallah and AlBirah"
+                    domain="[('district','=', 'Ramallah and AlBirah')]"
                 />
+                
                 <filter
-                    name="reserved"
-                    string="Reserved"
-                    domain="[('status','=', 'occupied')]"
+                    name="nablus"
+                    string="Nablus"
+                    domain="[('district','=', 'Nablus')]"
+                />
+                
+                <filter
+                    name="hebron"
+                    string="Hebron"
+                    domain="[('district','=', 'Hebron')]"
+                />
+                
+                <filter
+                    name="jericho"
+                    string="Jericho"
+                    domain="[('district','=', 'Jericho')]"
                 />
             </search>
         </field>
@@ -138,12 +119,20 @@
         <field name="name">hotel.room.tree</field>
         <field name="model">hotel.room</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree string="Hotel Room">
                 <field name="name" />
                 <field name="room_categ_id" />
-                <field name="list_price" string="Room rate" />
                 <field name="status" />
-                <field name="capacity" />
+                <field name="BBcode"/>
+                <field name="shape"/>
+                <field name="material"/>
+                <field name="bbspace_height"/>
+                <field name="bbspace_width" />
+                <field name="image" widget="image" class="oe_avatar"/>
+                
+  
+                     
+                
             </tree>
         </field>
     </record>
@@ -155,10 +144,10 @@
             <kanban default_group_by="status">
                 <field name="name" />
                 <field name="status" />
-                <field name="color" />
-                <field name="lst_price" />
+<!--                 <field name="color" /> -->
+<!--                 <field name="lst_price" /> -->
                 <field name="id" />
-                <field name="code" />
+<!--                 <field name="code" /> -->
                 <templates>
                     <t t-name="kanban-box">
                         <div
@@ -215,7 +204,7 @@
                                                     style="margin-right: 10px"
                                                 >
                                                     [
-                                                    <field name="code" />
+<!--                                                     <field name="code" /> -->
                                                     ]
                                                 </t>
                                                 <field name="name" />
@@ -230,11 +219,11 @@
                                         </li>
                                         <li>
                                             Rate:
-                                            <field name="lst_price" />
+<!--                                             <field name="lst_price" /> -->
                                         </li>
                                         <li>
                                             Capacity:
-                                            <field name="capacity" />
+<!--                                             <field name="capacity" /> -->
                                         </li>
                                     </ul>
                                 </div>
