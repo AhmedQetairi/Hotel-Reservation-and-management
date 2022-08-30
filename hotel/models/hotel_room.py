@@ -35,9 +35,9 @@ class HotelRoom(models.Model):
 
     
     room_categ_id = fields.Many2one(
-        "hotel.room.type", "Billboard Category", required=True, ondelete="restrict"
+        "hotel.room.type", "Billboard Category", ondelete="restrict"
     )
-    categ_id = fields.Many2one("hotel.room.type", "Category")
+    categ_id = fields.Many2one("hotel.room.type", "Category" , ondelete="restrict")
    
     status = fields.Selection(
         [("available", "Available"), ("occupied", "Occupied")],
@@ -50,15 +50,23 @@ class HotelRoom(models.Model):
     product_manager = fields.Many2one("res.users")
     
     isroom = fields.Boolean()
+    
+    product_id = fields.Many2one(
+        "product.product",
+        "Product_id",
+        required=True,
+        delegate=True,
+        ondelete="cascade",
+    )
 
     @api.model
     def create(self, vals):
-        if 'image' in vals:
-            picture = tools.ImageProcess(vals['image'])
-            # resize uploaded image into 250 X 250
-            resize_image = image.resize(250, 250)    
-            resize_image_b64 = resize_image.image_base64()   
-            vals['image'] = resize_image_b64
+#         if 'image' in vals:
+#             picture = tools.ImageProcess(vals['image'])
+#             # resize uploaded image into 250 X 250
+#             resize_image = image.resize(250, 250)    
+#             resize_image_b64 = resize_image.image_base64()   
+#             vals['image'] = resize_image_b64
             
         if "room_categ_id" in vals:
             room_categ = self.env["hotel.room.type"].browse(vals.get("room_categ_id"))
@@ -113,7 +121,7 @@ class HotelRoomType(models.Model):
     _name = "hotel.room.type"
     _description = "Room Type"
 
-    categ_id = fields.Many2one("hotel.room.type", "Category")
+    categ_id = fields.Many2one("hotel.room.type", "Category", ondelete="restrict")
     child_ids = fields.One2many("hotel.room.type", "categ_id", "Billboard Child Categories")
     product_categ_id = fields.Many2one(
         "product.category",

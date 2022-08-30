@@ -29,7 +29,7 @@
                         <page name="information_hotel_room" string="Information">
                             <group colspan="4" col="4">
 <!--                                 <field name="floor_id" string="Floor" /> -->
-                                <field name="room_categ_id" select="1" />
+                                <field name="categ_id" select="1" />
                                 <field name="location" select="1" required="1" />
                                 <field name="city" select="1" required="1" />
                                 <field name="district" select="1" required="1" />
@@ -121,7 +121,7 @@
         <field name="arch" type="xml">
             <tree string="Hotel Room">
                 <field name="name" />
-                <field name="room_categ_id" />
+                <field name="categ_id"/>
                 <field name="status" />
                 <field name="BBcode"/>
                 <field name="shape"/>
