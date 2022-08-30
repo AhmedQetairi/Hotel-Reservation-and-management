@@ -780,6 +780,7 @@ class HotelReservationLine(models.Model):
     
     name = fields.Char("Name")
     line_id = fields.Many2one("hotel.reservation")
+    categ_id = fields.Many2one("hotel.room.type", "Room Type")
     reserve = fields.Many2many(
         "hotel.room",
         "hotel_reservation_line_room_rel",
@@ -788,7 +789,7 @@ class HotelReservationLine(models.Model):
         domain="[('isroom','=',True),\
                                ('categ_id','=',categ_id)]",
     )
-    categ_id = fields.Many2one("hotel.room.type", "Room Type")
+    
     
     checkin = fields.Datetime(
         "Start Date",
@@ -822,7 +823,7 @@ class HotelReservationLine(models.Model):
                 )
             )
         hotel_room_ids = self.env["hotel.room"].search(
-            [("room_categ_id", "=", self.categ_id.id)]
+            [("categ_id", "=", self.categ_id.id)]
         )
         room_ids = []
         for room in hotel_room_ids:
