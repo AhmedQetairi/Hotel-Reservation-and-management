@@ -8,9 +8,7 @@ odoo.define("hotel_reservation.hotel_room_summary", function (require) {
     var QWeb = core.qweb;
     var FormView = require("web.FormView");
     var py = window.py;
-    var EditorMenuBar = Widget.extend(MyWidget,{
-        xmlDependencies: ["/hotel_reservation/static/src/xml/hotel_room_summary.xml"],
-    })
+    
 
     var MyWidget = FieldText.extend({
         template:"RoomSummary",
