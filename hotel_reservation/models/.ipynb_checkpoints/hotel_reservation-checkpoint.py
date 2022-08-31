@@ -823,7 +823,7 @@ class HotelReservationLine(models.Model):
                 )
             )
         hotel_room_ids = self.env["hotel.room"].search(
-            [("categ_id", "=", self.categ_id.id)]
+            [("room_categ_id", "=", self.categ_id.id)]
         )
         room_ids = []
         for room in hotel_room_ids:
