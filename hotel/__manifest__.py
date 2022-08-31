@@ -34,6 +34,6 @@
         "web.assets_backend": ["hotel/static/src/css/room_kanban.css"],
     },
     "external_dependencies": {"python": ["python-dateutil"]},
-    "images": ["static/description/Hotel.png"],
+    "images": ["static/description/sky logo.png"],
     "application": True,
 }

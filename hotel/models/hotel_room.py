@@ -5,16 +5,6 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
-class HotelFloor(models.Model):
-
-    _name = "hotel.floor"
-    _description = "Floor"
-    _order = "sequence"
-
-    name = fields.Char("Floor Name", required=True, index=True)
-    sequence = fields.Integer("sequence", default=10)
-
-
 class HotelRoom(models.Model):
 
     _name = "hotel.room"
