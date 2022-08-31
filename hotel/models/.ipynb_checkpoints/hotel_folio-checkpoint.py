@@ -6,6 +6,16 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import get_lang
+from datetime import datetime, timedelta
+from itertools import groupby
+import json
+
+from odoo import SUPERUSER_ID, _
+from odoo.exceptions import AccessError
+from odoo.osv import expression
+from odoo.tools import float_is_zero, html_keep_url, is_html_empty
+
+from odoo.addons.payment import utils as payment_utils
 
 
 class FolioRoomLine(models.Model):
@@ -82,6 +92,7 @@ class HotelFolio(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)], "sent": [("readonly", False)]},
         help="Hotel room reservation detail.",
+        copy=True,
     )
     service_line_ids = fields.One2many(
         "hotel.service.line",
@@ -294,6 +305,64 @@ class HotelFolio(models.Model):
                 "invoice_lines": [(6, 0, [])],
             }
         )
+        
+    def _find_mail_template(self, force_confirmation_template=False):
+        template_id = False
+
+        if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
+            template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
+            template_id = self.env['mail.template'].search([('id', '=', template_id)]).id
+            if not template_id:
+                template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+        if not template_id:
+            template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.email_template_edi_sale', raise_if_not_found=False)
+
+        return template_id
+
+
+    def action_quotation_send(self):
+        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
+        self.ensure_one()
+        template_id = self._find_mail_template()
+        lang = self.env.context.get('lang')
+        template = self.env['mail.template'].browse(template_id)
+        if template.lang:
+            lang = template._render_lang(self.ids)[self.id]
+        ctx = {
+            'default_model': 'sale.order',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+            'custom_layout': "mail.mail_notification_paynow",
+            'proforma': self.env.context.get('proforma', False),
+            'force_email': True,
+            'model_description': self.with_context(lang=lang).type_name,
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(False, 'form')],
+            'view_id': False,
+            'target': 'new',
+            'context': ctx,
+        }
+        
+#     def copy(self, default={}):
+#         """
+#         @param self: object pointer
+#         @param default: dict of default values to be set
+#         """
+# #         if default is None:
+# #             default={}
+# #         if not default.get(""):
+# #             default[""] = "%s ", self.
+# #         default[""] = 
+#         return super(HotelFolio,self).copy(default=default)
+# #         sale_line_obj = self.order_line_id
+# #         return sale_line_obj.copy_data(default=default)
 
 
 class HotelFolioLine(models.Model):
@@ -574,14 +643,13 @@ class HotelFolioLine(models.Model):
                     myduration += 1
         self.product_uom_qty = myduration
 
-    def copy_data(self, default=None):
-        """
-        @param self: object pointer
-        @param default: dict of default values to be set
-        """
-
-        sale_line_obj = self.order_line_id
-        return sale_line_obj.copy_data(default=default)
+#     def copy_data(self, default=None):
+#         """
+#         @param self: object pointer
+#         @param default: dict of default values to be set
+#         """
+#         sale_line_obj = self.order_line_id
+#         return sale_line_obj.copy_data(default=default)
 
 
 class HotelServiceLine(models.Model):

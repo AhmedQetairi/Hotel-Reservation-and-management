@@ -7,6 +7,13 @@
             <form>
                 <header>
                     <button
+                        name="action_quotation_send"
+                        type="object"
+                        states="draft"
+                        string="Send by Email"
+                        class="oe_highlight"
+                    />
+                    <button
                         name="action_confirm"
                         states="draft"
                         string="Confirm Sale"
